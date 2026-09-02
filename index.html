@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Auto Text Effect — Typing Animation By Adeeb Ali</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0d0f0d;
+    --bg-panel:#141712;
+    --line:#242822;
+    --text:#eef1ea;
+    --text-dim:#8b9186;
+    --accent:#B9FF66;
+    --accent-dim:#7fb03f;
+    --caret-w:3px;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html,body{
+    height:100%;
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+  }
+
+  body{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    min-height:100vh;
+    padding:32px 20px;
+    gap:40px;
+    background-image:
+      radial-gradient(circle at 15% 20%, rgba(185,255,102,0.05), transparent 40%),
+      radial-gradient(circle at 85% 80%, rgba(185,255,102,0.04), transparent 40%);
+  }
+
+  .stage{
+    width:100%;
+    max-width:720px;
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:56px 44px;
+    position:relative;
+    overflow:hidden;
+  }
+
+  .stage::before{
+    content:"";
+    position:absolute;
+    top:0; left:0; right:0;
+    height:1px;
+    background:linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity:.5;
+  }
+
+  .kicker{
+    font-family:'Space Grotesk', sans-serif;
+    font-size:13px;
+    letter-spacing:.02em;
+    color:var(--text-dim);
+    margin-bottom:18px;
+  }
+
+  .kicker span{ color:var(--accent); }
+
+  .display{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    font-size:clamp(28px, 5vw, 42px);
+    line-height:1.35;
+    min-height:2.7em;
+  }
+
+  .caret{
+    display:inline-block;
+    width:var(--caret-w);
+    height:1em;
+    background:var(--accent);
+    margin-left:2px;
+    transform:translateY(3px);
+    animation:blink 1s step-end infinite;
+  }
+
+  @keyframes blink{
+    0%,49%{ opacity:1; }
+    50%,100%{ opacity:0; }
+  }
+
+  .controls{
+    width:100%;
+    max-width:720px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+    align-items:center;
+  }
+
+  button{
+    font-family:'Space Grotesk', sans-serif;
+    font-weight:600;
+    font-size:14px;
+    padding:11px 20px;
+    border-radius:8px;
+    border:1px solid var(--line);
+    background:transparent;
+    color:var(--text);
+    cursor:pointer;
+    transition:border-color .15s ease, transform .1s ease;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+  }
+
+  button svg{ width:16px; height:16px; flex-shrink:0; }
+
+  button:hover{ border-color:var(--accent-dim); }
+  button:active{ transform:scale(.97); }
+
+  button.primary{
+    background:var(--accent);
+    color:#0d0f0d;
+    border-color:var(--accent);
+  }
+
+  button.primary:hover{ background:#a8f04d; }
+
+  .field{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    font-size:13px;
+    color:var(--text-dim);
+    margin-left:auto;
+  }
+
+  .field input[type="range"]{
+    accent-color:var(--accent);
+    width:110px;
+  }
+
+  footer{
+    color:var(--text-dim);
+    font-size:12.5px;
+    text-align:center;
+  }
+
+  footer a{ color:var(--accent); text-decoration:none; }
+  footer a:hover{ text-decoration:underline; }
+
+  @media (prefers-reduced-motion: reduce){
+    .caret{ animation:none; opacity:1; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="stage">
+    <div class="kicker">auto text effect <span>// setTimeout demo</span></div>
+    <div class="display" id="display" aria-live="polite"><span class="caret"></span></div>
+  </div>
+
+  <div class="controls">
+    <button class="primary" id="playBtn">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      Play
+    </button>
+    <button id="pauseBtn">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+      Pause
+    </button>
+    <button id="resetBtn">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.65 6.35A7.95 7.95 0 0012 4a8 8 0 108 8h-2a6 6 0 11-1.76-4.24L13 11h7V4l-2.35 2.35z"/></svg>
+      Reset
+    </button>
+    <div class="field">
+      <label for="speed">Speed</label>
+      <input type="range" id="speed" min="20" max="200" value="70">
+    </div>
+  </div>
+
+  <footer>
+    Built by <a href="#" target="_blank" rel="noopener">you</a> · #100DaysOfCode
+  </footer>
+
+<script>
+  const phrases = [
+    "Auto text effect animation.",
+    "Built with HTML, CSS & JavaScript.",
+    "Powered by setTimeout & the DOM.",
+    "Type. Delete. Repeat."
+  ];
+
+  const displayEl = document.getElementById('display');
+  const playBtn   = document.getElementById('playBtn');
+  const pauseBtn  = document.getElementById('pauseBtn');
+  const resetBtn  = document.getElementById('resetBtn');
+  const speedEl   = document.getElementById('speed');
+
+  let phraseIndex   = 0;
+  let charIndex     = 0;
+  let isDeleting     = false;
+  let timerId        = null;
+  let isPaused       = false;
+
+  function baseSpeed(){
+    return Number(speedEl.value);
+  }
+
+  function render(text){
+    displayEl.innerHTML = text + '<span class="caret"></span>';
+  }
+
+  function tick(){
+    if (isPaused) return;
+
+    const current = phrases[phraseIndex];
+    let delay = baseSpeed();
+
+    if (!isDeleting){
+      charIndex++;
+      render(current.slice(0, charIndex));
+
+      if (charIndex === current.length){
+        isDeleting = true;
+        delay = 1400;
+      }
+    } else {
+      charIndex--;
+      render(current.slice(0, charIndex));
+      delay = baseSpeed() / 2;
+
+      if (charIndex === 0){
+        isDeleting = false;
+        phraseIndex = (phraseIndex + 1) % phrases.length;
+        delay = 400;
+      }
+    }
+
+    timerId = setTimeout(tick, delay);
+  }
+
+  function play(){
+    if (timerId) clearTimeout(timerId);
+    isPaused = false;
+    tick();
+  }
+
+  function pause(){
+    isPaused = true;
+    if (timerId) clearTimeout(timerId);
+  }
+
+  function reset(){
+    pause();
+    phraseIndex = 0;
+    charIndex = 0;
+    isDeleting = false;
+    render('');
+  }
+
+  playBtn.addEventListener('click', play);
+  pauseBtn.addEventListener('click', pause);
+  resetBtn.addEventListener('click', reset);
+
+  render('');
+  play();
+</script>
+
+</body>
+</html>
